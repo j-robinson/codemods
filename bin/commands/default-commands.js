@@ -2,6 +2,7 @@
 const { isCleanGitRepo, promptUser } = require('../../lib/global/utils');
 const migrate = require('./migrate');
 const transform = require('./transform');
+const migrateApi = require('./api');
 
 const defaultTransform = async (type, path) => {
   await isCleanGitRepo(process.cwd());
@@ -13,6 +14,11 @@ const defaultMigrate = async () => {
   await migrate(type, path);
 };
 
+const defaultApi = async () => {
+  const { type, path } = await promptUser();
+  await migrateApi(type, path);
+}
+
 // Prompt's configuration
 const promptOptions = [
   {
@@ -22,6 +28,7 @@ const promptOptions = [
     choices: [
       { name: 'Migrate', value: 'migrate' },
       { name: 'Transform', value: 'transform' },
+      { name: 'Migrate Api Folder', value: 'api' },
     ],
   },
 ];
@@ -36,6 +43,9 @@ const defaultCommand = async () => {
         break;
       case 'transform':
         await defaultTransform();
+        break;
+      case 'api':
+        await defaultApi();
         break;
     }
 
